@@ -14,7 +14,7 @@ func (c *Calculator) Double() int{
 }
 
 func (c *Calculator) Square() int{
-  return c.n1 ** 2
+  return c.n1 * c.n1
 }
 
 func (c *Calculator) Add(n2 int) int{
@@ -36,9 +36,9 @@ func TestSimpleCalcDouble(t *testing.T){
   f := &fire {
   intf: &Calculator{n1: 10,},
   }
-  methods := f.Members()
-  expected := []string{"Add", "Double", "Square"}
-  if !reflect.DeepEqual(methods,expected)  {
-    t.Error("Expected [Add Double Square], got ", methods)
+
+  result := f.Call("Square")
+  if result != 100  {
+    t.Error("Expected 100, got ", result)
   }
 }

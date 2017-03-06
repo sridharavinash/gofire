@@ -20,3 +20,13 @@ func (f *fire) Members() []string{
 	}
   return ret
 }
+
+func (f *fire) Call(methodName string) interface{}{
+  tType := reflect.ValueOf(f.intf)
+  callMethod := tType.MethodByName(methodName)
+  if callMethod.IsValid(){
+    return callMethod.Call([]reflect.Value{})[0].Interface()
+  }
+  return ""
+
+}
