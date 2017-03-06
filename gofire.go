@@ -7,11 +7,11 @@ import(
 
 type fire struct{
   Name string
-  intf interface{}
+  iface interface{}
 }
 
 func (f *fire) Members() []string{
-  tType := reflect.TypeOf(f.intf)
+  tType := reflect.TypeOf(f.iface)
   numOfExportedMethods := tType.NumMethod()
   ret := make([]string, numOfExportedMethods)
 	for i := 0; i < tType.NumMethod(); i++ {
@@ -21,11 +21,16 @@ func (f *fire) Members() []string{
   return ret
 }
 
-func (f *fire) Call(methodName string) interface{}{
-  tType := reflect.ValueOf(f.intf)
+func (f *fire) CallMethod(methodName string, args ...interface{}) interface{}{
+  tType := reflect.ValueOf(f.iface)
   callMethod := tType.MethodByName(methodName)
+
   if callMethod.IsValid(){
-    return callMethod.Call([]reflect.Value{})[0].Interface()
+    inputs := make([]reflect.Value, len(args))
+    for i, _ := range args {
+      inputs[i] = reflect.ValueOf(args[i])
+    }
+    return callMethod.Call(inputs)[0].Interface()
   }
   return ""
 
