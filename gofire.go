@@ -10,6 +10,12 @@ type fire struct{
   iface interface{}
 }
 
+func Fire(i interface{}) *fire{
+  return &fire{
+    iface: i,
+  }
+}
+
 func (f *fire) Members() []string{
   tType := reflect.TypeOf(f.iface)
   numOfExportedMethods := tType.NumMethod()
