@@ -33,7 +33,7 @@ func TestSimpleCalc(t *testing.T){
 func TestSimpleCalcDouble(t *testing.T){
   f := Fire(&Calculator{n1: 10,})
 
-  result := f.CallMethod("Square")
+  result, _ := f.CallMethod("Square")
   if result != 100  {
     t.Error("Expected 100, got ", result)
   }
@@ -42,8 +42,17 @@ func TestSimpleCalcDouble(t *testing.T){
 func TestSimpleCalcAdd(t *testing.T){
   f := Fire(&Calculator{n1: 10,},)
 
-  result := f.CallMethod("Add",20)
+  result, _ := f.CallMethod("Add",20)
   if result != 30  {
     t.Error("Expected 30, got ", result)
+  }
+}
+
+func TestSimpleCalcInvalidMethod(t *testing.T){
+  f := Fire(&Calculator{})
+
+  result, err := f.CallMethod("Subtract",20)
+  if err == nil {
+    t.Error("Expected error, got ", result)
   }
 }

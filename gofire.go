@@ -2,6 +2,8 @@ package gofire
 
 import(
     "reflect"
+    "errors"
+    "strings"
 )
 
 
@@ -27,7 +29,7 @@ func (f *fire) Members() []string{
   return ret
 }
 
-func (f *fire) CallMethod(methodName string, args ...interface{}) interface{}{
+func (f *fire) CallMethod(methodName string, args ...interface{}) (interface{}, error){
   tType := reflect.ValueOf(f.iface)
   callMethod := tType.MethodByName(methodName)
 
@@ -36,8 +38,8 @@ func (f *fire) CallMethod(methodName string, args ...interface{}) interface{}{
     for i, _ := range args {
       inputs[i] = reflect.ValueOf(args[i])
     }
-    return callMethod.Call(inputs)[0].Interface()
+    return callMethod.Call(inputs)[0].Interface(), nil
   }
-  return ""
-
+  valid_methods := f.Members()
+  return nil, errors.New("No such method: " + methodName + "\nValid Methods: " + strings.Join(valid_methods, ", ") )
 }
