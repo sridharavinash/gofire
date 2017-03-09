@@ -4,6 +4,7 @@ import(
     "reflect"
     "errors"
     "strings"
+    "strconv"
 )
 
 
@@ -34,12 +35,19 @@ func (f *fire) CallMethod(methodName string, args ...interface{}) (interface{}, 
   callMethod := tType.MethodByName(methodName)
 
   if callMethod.IsValid(){
-    inputs := make([]reflect.Value, len(args))
+    inputs := make([]reflect.Value, callMethod.Type().NumIn())
     for i, _ := range args {
-      inputs[i] = reflect.ValueOf(args[i])
+      in_type := callMethod.Type().In(i)
+      var z int
+      switch in_type.Kind() {
+      case reflect.Int:
+        z ,_ = strconv.Atoi(reflect.ValueOf(args[i]).String())
+      }
+      inputs[i] = reflect.ValueOf(z)
     }
-    return callMethod.Call(inputs)[0].Interface(), nil
-  }
+
+  return callMethod.Call(inputs)[0].Interface(), nil
+}
   valid_methods := f.Members()
   return nil, errors.New("No such method: " + methodName + "\nValid Methods: " + strings.Join(valid_methods, ", ") )
 }
